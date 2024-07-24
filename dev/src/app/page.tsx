@@ -1,9 +1,10 @@
-import Test from "@/frontend/test";
-
-export default function Home() {
+import Home from "./pages/home/page";
+import Match from "./pages/match/page";
+export default function InitialPage() {
   return (
     <div>
-      <Test />
+      <Home />
+      <Match />
     </div>
   );
 }

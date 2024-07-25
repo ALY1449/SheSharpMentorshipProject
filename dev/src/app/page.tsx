@@ -1,5 +1,5 @@
-import Home from "./pages/home/page";
-import Match from "./pages/match/page";
+import Home from "./frontend/pages/home/page";
+import Match from "./frontend/pages/match/page";
 export default function InitialPage() {
   return (
     <div>

@@ -1,0 +1,4 @@
+unique_id,fullName,mentor_fullName,predicted_cosine_similarity
+1000002,Alesson Abao,Zoey Zhou ,0.34615384615384615
+1000000,Alesson Abao,Melissa Crawford,0.3076923076923077
+1000001,Alesson Abao,Emilie McCallum,0.3076923076923077

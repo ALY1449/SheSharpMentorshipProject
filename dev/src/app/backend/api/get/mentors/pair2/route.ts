@@ -1,5 +1,4 @@
 import database from "@/app/backend/firestore/firestore";
-import { Status } from "@/app/frontend/interface/Status";
 import {
   query,
   collection,
@@ -10,16 +9,17 @@ import {
 import { NextApiResponse } from "next";
 import { NextRequest } from "next/server";
 import fs from "fs";
+import { Status } from "@/app/frontend/interface/Status";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest, res: NextApiResponse) {
   try {
     let converter = require("json-2-csv");
-    const id = req.nextUrl.searchParams.get("slug");
+    const id = req.nextUrl.searchParams.get("slug"); // Access the slug parameter
     console.log("id ", id);
 
-    // Fetch all documents in the "Mentors" collection
+    // Fetch all documents in the "Mentees" collection
     const q = query(
       collection(database, "Mentors"),
       where("documentOf", "==", id)
@@ -75,6 +75,14 @@ export async function GET(req: NextRequest, res: NextApiResponse) {
           innerDocData.push(doc.data());
         });
 
+        const skills = await getDocs(
+          collection(database, "Mentors", uniqueId, "Skills")
+        );
+
+        skills.forEach((doc) => {
+          innerDocData.push(doc.data());
+        });
+
         docData.push(innerDocData);
       })
     );
@@ -83,72 +91,88 @@ export async function GET(req: NextRequest, res: NextApiResponse) {
       // Assuming you have data in the format of an array of arrays
       const data = [
         [
-          "Timestamp",
-          "Name",
-          "Organisation",
-          "Job title",
           "Gender",
+          "Full Name",
           "Email",
           "Phone number",
-          "Short description of your role",
-          "Why I chose to offer myself as a mentor",
-          "What would you hope to get from this program?",
+          "Specialisation",
+          "Organisation",
+          "Job title",
+          "Student subject type",
           "What type/s of mentee would you prefer?",
-          "What type of students are best aligned with your expertise?",
-          "Which subjects are best aligned with your expertise?",
+          "What would you hope to get from this program?",
+          "Second Short term goal",
+          "First Short term goal",
+          "Why I chose to offer myself as a mentor",
+          "Long Term goal",
           "Personality Type",
-          "Please attach a photo of yourself",
-          "Short Bio",
+          "First basic industry skill",
+          "First basic soft skill",
+          "Second basic industry skill",
+          "First expert industry skill",
+          "Second expert industry skill",
+          "First expert soft skill",
         ],
         [
-          "19/04/2023 12:55",
-          docData[0][0].fullName,
-          docData[0][1].organisation,
-          docData[0][1].jobTitle,
           docData[0][0].gender,
+          docData[0][0].fullName,
           docData[0][0].emailAddress,
           docData[0][0].phoneNumber,
           docData[0][1].specialisation,
-          docData[0][3].motivation,
-          docData[0][3].outcome,
+          docData[0][1].organisation,
+          docData[0][1].jobTitle,
+          `${docData[0][2].studentType.join(", ")}`,
           docData[0][2].menteeType,
-          "Engineering",
-          docData[0][2].studentType.join(", "),
+          docData[0][3].outcome,
+          docData[0][3].firstShortTermGoal,
+          docData[0][3].secondShortTermGoal,
+          docData[0][3].motivation,
+          docData[0][3].longTermGoal,
           docData[0][4].personalityType,
-          "",
-          "Here is a bio",
+          docData[0][5].basicSkills.firstBasicIndustrySkill,
+          docData[0][5].basicSkills.firstBasicSoftSkill,
+          docData[0][5].basicSkills.secondBasicIndustrySkill,
+          docData[0][5].expertSkills.firstExpertIndustrySkill,
+          docData[0][5].expertSkills.firstExpertSoftSkill,
+          docData[0][5].expertSkills.secondExpertIndustrySkill,
         ],
       ];
 
       // Convert the array of arrays to JSON
       const jsonData = data.slice(1).map((row) => ({
-        Timestamp: row[0],
-        Name: row[1],
-        Organisation: row[2],
-        "Job title": row[3],
-        Gender: row[4],
-        Email: row[5],
-        "Phone number": row[6],
-        "Short description of your role": row[7],
-        "Why I chose to offer myself as a mentor": row[8],
-        "What would you hope to get from this program?": row[9],
-        "What type/s of mentee would you prefer?": row[10],
-        "What type of students are best aligned with your expertise?": row[11],
-        "Which subjects are best aligned with your expertise?": row[12],
-        "Personality Type": row[13],
-        "Please attach a photo of yourself": row[14],
-        "Short Bio": row[15],
+        gender: row[0],
+        fullName: row[1],
+        emailAddress: row[2],
+        phoneNumber: row[3],
+        specialisation: row[4],
+        organisation: row[5],
+        jobTitle: row[6],
+        "student subject Type": row[7],
+        menteeType: row[8],
+        outcome: row[9],
+        secondShortTermGoal: row[10],
+        firstShortTermGoal: row[11],
+        motivation: row[12],
+        longTermGoal: row[13],
+        personalityType: row[14],
+        firstBasicIndustrySkill: row[15],
+        firstBasicSoftSkill: row[16],
+        secondBasicIndustrySkill: row[17],
+        firstExpertIndustrySkill: row[18],
+        secondExpertIndustrySkill: row[19],
+        firstExpertSoftSkill: row[20],
       }));
 
       const csv = await converter.json2csv(jsonData);
 
-      // Save the CSV
-      const filePath = "src/app/backend/api/pair/data/mentor_eoi_data.csv";
+      // Specify the file path where you want to save the CSV
+      const filePath =
+        "src/app/backend/api/backend/tests/dummy-data-test/mentor_eoi_data2.csv";
 
       fs.writeFileSync(filePath, csv, "utf8");
     }
 
-    console.log("CSV file has been saved.");
+    console.log("Mentor2 CSV file has been saved.");
 
     const r = query(
       collection(database, "Mentees"),
@@ -205,6 +229,14 @@ export async function GET(req: NextRequest, res: NextApiResponse) {
           innerDocData.push(doc.data());
         });
 
+        const skills = await getDocs(
+          collection(database, "Mentees", uniqueId, "Skills")
+        );
+
+        skills.forEach((doc) => {
+          innerDocData.push(doc.data());
+        });
+
         docData2.push(innerDocData);
       })
     );
@@ -212,19 +244,27 @@ export async function GET(req: NextRequest, res: NextApiResponse) {
     //Assuming you have data in the format of an array of arrays
     const data2 = [
       [
-        "Timestamp",
-        "Name",
-        "Student ID",
-        "Email",
         "Phone number",
-        "What programme are you currently enrolled in?",
+        "Full name",
+        "Email",
+        "Age",
+        "Current stage",
         "Which major/s are you currently enrolled in?",
         "Which year of the degree are you?",
-        "Which STEM sector are you interested in and why?",
+        "What programme are you currently enrolled in?",
         "What would you hope to get from this program?",
-        "What type of mentor would you prefer?",
+        "First Short term goal",
+        "Second Short term goal",
+        "Long Term goal",
         "I prefer",
+        "What STEM sector are you interested in?",
         "Personality Type",
+        "First basic industry skill",
+        "First basic soft skill",
+        "Second basic industry skill",
+        "First expert industry skill",
+        "Second expert industry skill",
+        "First expert soft skill",
       ],
     ];
 
@@ -232,48 +272,65 @@ export async function GET(req: NextRequest, res: NextApiResponse) {
       for (let i = 0; i < uniqueIds2.length; i++) {
         let index = i;
         data2.push([
-          "19/04/2023 12:55",
-          docData2[index][0].fullName,
-          "18021379",
-          docData2[index][0].emailAddress,
-          docData2[index][0].phoneNumber,
-          `${docData2[index][1].programs}`,
-          `${docData2[index][1].majors.join(", ")}`,
-          "2nd year undergraduate",
-          `${docData2[index][3].stemSector.join(", ")}`,
-          `${docData2[index][2].outcome}`,
-          "Industry",
-          `${docData2[index][3].preferences}`,
-          `${docData2[index][4].personalityType}`,
+          docData2[i][0].phoneNumber,
+          docData2[i][0].fullName,
+          docData2[i][0].emailAddress,
+          docData2[i][0].age,
+          docData2[i][0].currentStage,
+          docData2[i][1].majors[0],
+          docData2[i][1].yearOfDegree,
+          docData2[i][1].programs[0],
+          docData2[i][2].outcome,
+          docData2[i][2].firstShortTermGoal,
+          docData2[i][2].secondShortTermGoal,
+          docData2[i][2].longTermGoal,
+          `${docData2[i][3].preferences.join(", ")}`,
+          `${docData2[i][3].stemSector.join(", ")}`,
+          docData2[i][4].personalityType,
+          docData2[i][5].basicSkills.firstBasicIndustrySkill,
+          docData2[i][5].basicSkills.firstBasicSoftSkill,
+          docData2[i][5].basicSkills.secondBasicIndustrySkill,
+          docData2[i][5].expertSkills.firstExpertIndustrySkill,
+          docData2[i][5].expertSkills.firstExpertSoftSkill,
+          docData2[i][5].expertSkills.secondExpertIndustrySkill,
         ]);
       }
     }
 
     // Convert the array of arrays to JSON
     const jsonData = data2.slice(1).map((row) => ({
-      Timestamp: row[0],
-      Name: row[1],
-      "Student ID": row[2],
-      Email: row[3],
-      "Phone number": row[4],
-      "What programme are you currently enrolled in?": row[5],
-      "Which major/s are you currently enrolled in?": row[6],
-      "Which year of the degree are you?": row[7],
-      "Which STEM sector are you interested in and why?": row[8],
-      "What would you hope to get from this program?": row[9],
-      "What type of mentor would you prefer?": row[10],
-      "I prefer": row[11],
-      "Personality Type": row[12],
+      phoneNumber: row[0],
+      fullName: row[1],
+      emailAddress: row[2],
+      age: row[3],
+      currentStage: row[4],
+      majors: row[5],
+      yearOfDegree: row[6],
+      programs: row[7],
+      outcome: row[8],
+      firstShortTermGoal: row[9],
+      secondShortTermGoal: row[10],
+      longTermGoal: row[11],
+      preferences: row[12],
+      stemSector: row[13],
+      personalityType: row[14],
+      firstBasicIndustrySkill: row[15],
+      firstBasicSoftSkill: row[16],
+      secondBasicIndustrySkill: row[17],
+      firstExpertIndustrySkill: row[18],
+      secondExpertIndustrySkill: row[19],
+      firstExpertSoftSkill: row[20],
     }));
 
     const csv = await converter.json2csv(jsonData);
 
-    // Save the CSV
-    const filePath = "src/app/backend/api/pair/data/mentee_eoi_data.csv";
+    // Specify the file path where you want to save the CSV
+    const filePath =
+      "src/app/backend/api/backend/tests/dummy-data-test/mentee_eoi_data2.csv";
 
     fs.writeFileSync(filePath, csv, "utf8");
 
-    console.log("MenteeCSV file has been saved.");
+    console.log("Mentee2CSV file has been saved.");
 
     return Response.json({ message: "success " });
   } catch (error) {

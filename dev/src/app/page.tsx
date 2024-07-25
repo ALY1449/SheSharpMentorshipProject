@@ -1,4 +1,4 @@
-import Home from "./frontend/pages/home/page";
+import Home from "./home/page";
 export default function InitialPage() {
   return (
     <div>

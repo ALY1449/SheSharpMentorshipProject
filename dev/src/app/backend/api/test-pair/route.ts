@@ -6,15 +6,16 @@ import csvParser from "csv-parser";
 export const dynamic = "force-dynamic";
 export async function GET(req: NextRequest, res: NextApiResponse) {
   const fs = require("fs");
-  const rmdPath = "./src/app/backend/api/pair/matchingAlgorithm.Rmd";
+  const rmdPath =
+    "/Users/alyssapausanos/SheSharpMentorshipProject/SheSharpMentorshipProject/dev/src/app/backend/api/backend/tests/dummy-data-test/test app v1 dummy data.py";
   const dataArray: any[] = [];
 
   try {
     // Execute R script
     await new Promise<void>((resolve, reject) => {
-      exec(`Rscript -e "rmarkdown::render('${rmdPath}')"`, (err) => {
+      exec(`python3 '${rmdPath}'`, (err) => {
         if (err) {
-          console.error("Error executing Rmd file:", err);
+          console.error("Error executing python file:", err);
           reject(err);
         } else {
           resolve();
@@ -25,22 +26,24 @@ export async function GET(req: NextRequest, res: NextApiResponse) {
     // Read the CSV file and parse it
     await new Promise<void>((resolve, reject) => {
       const stream = fs
-        .createReadStream("./src/app/backend/api/pair/proposed_matches.csv")
+        .createReadStream(
+          "/Users/alyssapausanos/SheSharpMentorshipProject/SheSharpMentorshipProject/dev/src/app/backend/api/backend/tests/dummy-data-test/proposed_matches.csv"
+        )
         .pipe(csvParser())
         .on(
           "data",
           (data: {
-            mentee_name: any;
-            mentee_email: any;
-            mentor_name: any;
-            mentor_email: any;
+            unique_id: any;
+            fullName: any;
+            mentor_fullName: any;
+            predicted_cosine_similarity: any;
           }) => {
             // Push each row of data to the array
             dataArray.push({
-              mentee_name: data.mentee_name,
-              mentee_email: data.mentee_email,
-              mentor_name: data.mentor_name,
-              mentor_email: data.mentor_email,
+              unique_id: data.unique_id,
+              fullName: data.fullName,
+              mentor_fullName: data.mentor_fullName,
+              predicted_cosine_similarity: data.predicted_cosine_similarity,
             });
           }
         )
@@ -55,7 +58,6 @@ export async function GET(req: NextRequest, res: NextApiResponse) {
       // Wait for the stream to finish
       stream.on("finish", resolve);
     });
-
     // Send the response with populated dataArray
     return Response.json(dataArray);
   } catch (error) {

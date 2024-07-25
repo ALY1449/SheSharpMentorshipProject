@@ -7,7 +7,6 @@ import PairingCompleteSkeleton from "./pairingCompleteSkeleton";
 import { ResultsProps } from "../../interface/ResultsProps";
 
 const ResultsComponent: React.FC<ResultsProps> = ({
-  data,
   dataOf,
   participatingAs,
 }) => {

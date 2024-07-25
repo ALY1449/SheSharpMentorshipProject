@@ -134,7 +134,7 @@ export async function GET(req: NextRequest, res: NextApiResponse) {
     const csv = await converter.json2csv(jsonData);
 
     // Specify the file path where you want to save the CSV
-    const filePath = "src/app/api/pair/data/mentee_eoi_data.csv";
+    const filePath = "src/app/backend/api/pair/data/mentee_eoi_data.csv";
 
     fs.writeFileSync(filePath, csv, "utf8");
 
@@ -267,7 +267,7 @@ export async function GET(req: NextRequest, res: NextApiResponse) {
       const csv = await converter.json2csv(jsonData);
 
       // Specify the file path where you want to save the CSV
-      const filePath = "src/app/api/pair/data/mentor_eoi_data.csv";
+      const filePath = "src/app/backend/api/pair/data/mentor_eoi_data.csv";
 
       fs.writeFileSync(filePath, csv, "utf8");
     }

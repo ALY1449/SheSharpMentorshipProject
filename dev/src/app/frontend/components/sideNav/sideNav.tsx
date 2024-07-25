@@ -130,7 +130,7 @@ export default function MiniDrawer({
         // Parameters are already in the URL
         router.push(`/match?q=${qValue}&r=${rValue}`);
       } else {
-        router.push(`/frontend/pages/match`);
+        router.push(`/match`);
       }
     }
 

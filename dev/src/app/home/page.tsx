@@ -1,19 +1,22 @@
 "use client";
-import LabTabs from "../../components/tabs/tabs";
+import LabTabs from "../frontend/components/tabs/tabs";
 import app from "@/app/backend/firestore/appFirestore";
 import database from "@/app/backend/firestore/firestore";
 import auth from "@/app/backend/firestore/authFirestore";
-import { AuthSignIn } from "../../redux/dashboard/actions/authSignIn";
-import { FetchMenteeCollections } from "../../redux/dashboard/actions/fetchMenteeCollection";
-import { FetchMentorCollections } from "../../redux/dashboard/actions/fetchMentorCollections";
-import { TotalMentees } from "../../redux/dashboard/actions/totalMentees";
-import { TotalMentors } from "../../redux/dashboard/actions/totalMentors";
-import { WithMentees } from "../../redux/dashboard/actions/withMentees";
-import { WithMentors } from "../../redux/dashboard/actions/withMentors";
-import { WithNoMentees } from "../../redux/dashboard/actions/withNoMentees";
-import { WithNoMentors } from "../../redux/dashboard/actions/withNoMentors";
-import { APIStatus, restartStatus } from "../../redux/dashboard/dashboardSlice";
-import { useAppDispatch, useAppSelector } from "../../redux/hook";
+import { AuthSignIn } from "../frontend/redux/dashboard/actions/authSignIn";
+import { FetchMenteeCollections } from "../frontend/redux/dashboard/actions/fetchMenteeCollection";
+import { FetchMentorCollections } from "../frontend/redux/dashboard/actions/fetchMentorCollections";
+import { TotalMentees } from "../frontend/redux/dashboard/actions/totalMentees";
+import { TotalMentors } from "../frontend/redux/dashboard/actions/totalMentors";
+import { WithMentees } from "../frontend/redux/dashboard/actions/withMentees";
+import { WithMentors } from "../frontend/redux/dashboard/actions/withMentors";
+import { WithNoMentees } from "../frontend/redux/dashboard/actions/withNoMentees";
+import { WithNoMentors } from "../frontend/redux/dashboard/actions/withNoMentors";
+import {
+  APIStatus,
+  restartStatus,
+} from "../frontend/redux/dashboard/dashboardSlice";
+import { useAppDispatch, useAppSelector } from "../frontend/redux/hook";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { Box } from "@mui/material";
 import {
